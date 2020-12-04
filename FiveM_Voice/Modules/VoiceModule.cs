@@ -1,0 +1,240 @@
+﻿using System;
+using System.Threading.Tasks;
+
+using CitizenFX.Core;
+using CitizenFX.Core.Native;
+using CitizenFX.Core.UI;
+using VinaFrameworkClient.Core;
+
+namespace FiveM_Voice.Modules
+{
+    public enum Voices
+    {
+        Whisper = 5,
+        Default = 10,
+        Shout = 20
+    }
+
+    public class VoiceModule : Module
+    {
+        public VoiceModule(Client client) : base(client)
+        {
+            script.AddEvent("Voice.SetVoiceSettings", new Action<float, float, float>(OnSetVoiceSettings));
+        }
+
+        #region ACCESSORS
+
+
+
+        #endregion
+        #region VARIABLES
+
+        int playerId = -1;
+        bool enabled = false;
+        bool visible = false;
+        float levelWhisper = 5.0f;
+        float levelDefault = 25.0f;
+        float levelShout = 50.0f;
+        Voices voiceLevel = Voices.Default;
+        string voiceLevelStr = "";
+
+        #endregion
+        #region BASE EVENTS
+
+        protected override void OnModuleInitialized()
+        {
+            playerId = API.PlayerId();
+
+            script.AddTick(ProcessControls);
+            script.AddTick(DrawVoiceLevel);
+            script.AddTick(UpdateVoiceProximity);
+            script.AddTick(DrawCurrentlyTalking);
+        }
+
+        #endregion
+        #region MODULE EVENTS
+
+        private void OnSetVoiceSettings(float whisper_level, float default_level, float shout_level)
+        {
+            script.Log($"Server SetVoiceSettings received!");
+
+            levelWhisper = whisper_level;
+            levelDefault = default_level;
+            levelShout = shout_level;
+
+            script.Log($"Whisper voice level set to {levelWhisper}");
+            script.Log($"Default voice level set to {levelDefault}");
+            script.Log($"Shout voice level set to {levelShout}");
+
+            SetVoiceLevel(Voices.Default);
+
+            enabled = true;
+        }
+
+        #endregion
+        #region MODULES TICKS
+
+        private async Task UpdateVoiceProximity()
+        {
+            await Client.Delay(1);
+
+            visible = isVisible();
+
+            if (!enabled)
+            {
+                API.NetworkSetVoiceActive(false);
+                return;
+            }
+
+            API.NetworkSetVoiceActive(true);
+            API.NetworkClearVoiceChannel();
+            
+            if (voiceLevel == Voices.Whisper)
+            {
+                API.NetworkSetTalkerProximity(levelWhisper);
+            }
+            else if (voiceLevel == Voices.Default)
+            {
+                API.NetworkSetTalkerProximity(levelDefault);
+            }
+            else if (voiceLevel == Voices.Shout)
+            {
+                API.NetworkSetTalkerProximity(levelShout);
+            }
+        }
+
+        private async Task ProcessControls()
+        {
+            bool keyOne = (Game.IsControlPressed(0, Control.Sprint) || Game.IsDisabledControlPressed(0, Control.Sprint));
+            bool keyTwo = (Game.IsControlJustPressed(0, Control.VehicleHeadlight) || Game.IsDisabledControlJustPressed(0, Control.VehicleHeadlight));
+
+            if (keyOne && keyTwo)
+            {
+                SetNextVoiceLevel();
+            }
+        }
+
+        private async Task DrawVoiceLevel()
+        {
+            if (!enabled || !visible) return;
+
+            if (API.NetworkIsPlayerTalking(playerId))
+            {
+                DrawLevel(41, 128, 185, 255);
+            }
+            else
+            {
+                DrawLevel(185, 185, 185, 255);
+            }
+        }
+
+        private async Task DrawCurrentlyTalking()
+        {
+            if (!enabled || !visible) return;
+            
+            var i = 1;
+            var currentlyTalking = false;
+
+            foreach (Player player in client.GetPlayers())
+            {
+                if (API.NetworkIsPlayerTalking(player.Handle))
+                {
+                    if (!currentlyTalking)
+                    {
+                        DrawTextOnScreen("~s~Currently Talking", 0.5f, 0.00f, 0.5f, Alignment.Center, 6, false);
+                        currentlyTalking = true;
+                    }
+                    if (player.Handle == playerId)
+                    {
+                        DrawTextOnScreen($"~b~You", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
+                    }
+                    else
+                    {
+                        DrawTextOnScreen($"~b~{player.Name}", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
+                    }
+                    i++;
+                }
+            }
+        }
+
+        #endregion
+        #region MODULES METHODS
+
+        private bool isVisible()
+        {
+            return (API.IsHudPreferenceSwitchedOn() && !API.IsPlayerSwitchInProgress() && API.IsScreenFadedIn() && !API.IsPauseMenuActive() && !API.IsFrontendFading() && !API.IsPauseMenuRestarting() && !API.IsHudHidden());
+        }
+
+        private void SetVoiceLevel(Voices level)
+        {
+            voiceLevel = level;
+
+            if (voiceLevel == Voices.Whisper)
+            {
+                voiceLevelStr = $"Whisper ({levelWhisper}m)";
+            }
+            else if (voiceLevel == Voices.Default)
+            {
+                voiceLevelStr = $"Default ({levelDefault}m)";
+            }
+            else if (voiceLevel == Voices.Shout)
+            {
+                voiceLevelStr = $"Shout ({levelShout}m)";
+            }
+
+            script.Log($"Voice level set to {voiceLevelStr}");
+        }
+
+        private void SetNextVoiceLevel()
+        {
+            if (voiceLevel == Voices.Whisper)
+            {
+                voiceLevel = Voices.Default;
+            }
+            else if (voiceLevel == Voices.Default)
+            {
+                voiceLevel = Voices.Shout;
+            }
+            else if (voiceLevel == Voices.Shout)
+            {
+                voiceLevel = Voices.Whisper;
+            }
+
+            SetVoiceLevel(voiceLevel);
+        }
+
+        private void DrawLevel(int r, int g, int b, int a)
+        {
+            if (!enabled || !visible) return;
+
+            API.SetTextFont(4);
+            API.SetTextScale(0.5f, 0.5f);
+            API.SetTextColour(r, g, b, a);
+            API.SetTextDropshadow(0, 0, 0, 0, 255);
+            API.SetTextDropShadow();
+            API.SetTextOutline();
+            API.BeginTextCommandDisplayText("STRING");
+            API.AddTextComponentSubstringPlayerName(voiceLevelStr);
+            API.EndTextCommandDisplayText(0.175f, 0.92f);
+        }
+
+        private void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, Alignment justification, int font, bool disableTextOutline)
+        {
+            if (!enabled || !visible) return;
+
+            API.SetTextFont(font);
+            API.SetTextScale(1.0f, size);
+            if (justification == Alignment.Right)
+            {
+                API.SetTextWrap(0f, xPosition);
+            }
+            API.SetTextJustification((int)justification);
+            if (!disableTextOutline) { API.SetTextOutline(); }
+            API.BeginTextCommandDisplayText("STRING");
+            API.AddTextComponentSubstringPlayerName(text);
+            API.EndTextCommandDisplayText(xPosition, yPosition);
+        }
+
+        #endregion
+    }
+}
