@@ -26,14 +26,14 @@
 - setVisibility(**bool**)  
 **Toggle the HUD visibility on or off**  
   
-- getVoiceLevel() **return int** 
+- getVoiceLevel() **return int**  
 **Get the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
   
 - setVoiceLevel(**int**)  
 **Set the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
   
 - getVoiceChannel() **return int**  
-**Set the voice channel -1 is proximity, >= 0 is channels** 
+**Set the voice channel -1 is proximity, >= 0 is channels**  
   
 - setVoiceChannel(**int**)  
 **Set the voice channel -1 is proximity, >= 0 is channels**  
