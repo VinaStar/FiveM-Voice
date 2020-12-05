@@ -11,7 +11,12 @@
   
 ---
   
-![Server Console Output](https://i.imgur.com/r3eYRmC.png)
+**Client Performance**  
+![Client Memory Usage](https://i.imgur.com/BjJ1isu.png)  
+**Server Performance**  
+![Client Memory Usage](https://i.imgur.com/sZlnrWQ.png)  
+**Server Console Output**  
+![Server Console Output](https://i.imgur.com/r3eYRmC.png)  
   
 ---
   
