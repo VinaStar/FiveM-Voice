@@ -303,6 +303,7 @@ namespace FiveM_Voice.Modules
         {
             if (voiceChannel < -1) voiceChannel = -1;
             channel = voiceChannel;
+            script.Log($"Voice channel set to {channel} from an export call.");
         }
 
         #endregion
