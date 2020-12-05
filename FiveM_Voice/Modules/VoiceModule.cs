@@ -37,21 +37,6 @@ namespace FiveM_Voice.Modules
             script.SetExport("setVoiceChannel", new Action<int>(ExportSetVoiceChannel));
         }
 
-        private void OnSetVoiceEnabled(bool enabled)
-        {
-            SetVoiceEnabled(enabled);
-        }
-
-        private void OnSetVoiceLevel(int level)
-        {
-            SetVoiceLevel(level);
-        }
-
-        private void OnSetVoiceChannel(int channel)
-        {
-            SetVoiceChannel(channel);
-        }
-
         #region ACCESSORS
 
 
@@ -101,6 +86,21 @@ namespace FiveM_Voice.Modules
             SetVoiceLevel(Voices.Default);
 
             SetVoiceEnabled(true);
+        }
+
+        private void OnSetVoiceEnabled(bool enabled)
+        {
+            SetVoiceEnabled(enabled, false);
+        }
+
+        private void OnSetVoiceLevel(int level)
+        {
+            SetVoiceLevel(level, false);
+        }
+
+        private void OnSetVoiceChannel(int channel)
+        {
+            SetVoiceChannel(channel, false);
         }
 
         #endregion
@@ -207,21 +207,21 @@ namespace FiveM_Voice.Modules
             return (!hidden && enabled && API.IsHudPreferenceSwitchedOn() && !API.IsPlayerSwitchInProgress() && API.IsScreenFadedIn() && !API.IsPauseMenuActive() && !API.IsFrontendFading() && !API.IsPauseMenuRestarting());
         }
 
-        private void SetVoiceEnabled(bool isEnabled)
+        private void SetVoiceEnabled(bool isEnabled, bool net = true)
         {
             enabled = isEnabled;
-            Client.TriggerServerEvent("Voice.PlayerVoiceEnabledChanged", enabled);
+            if (net) Client.TriggerServerEvent("Voice.PlayerVoiceEnabledChanged", enabled);
         }
 
-        private void SetVoiceLevel(int level)
+        private void SetVoiceLevel(int level, bool net = true)
         {
             if (level >= 0 && level <= 2)
             {
-                SetVoiceLevel((Voices)level);
+                SetVoiceLevel((Voices)level, net);
             }
-            else SetVoiceLevel(Voices.Default);
+            else SetVoiceLevel(Voices.Default, net);
         }
-        private void SetVoiceLevel(Voices level)
+        private void SetVoiceLevel(Voices level, bool net = true)
         {
             voiceLevel = level;
 
@@ -238,17 +238,17 @@ namespace FiveM_Voice.Modules
                 voiceLevelStr = $"Shout ({levelShout}m)";
             }
 
-            Client.TriggerServerEvent("Voice.PlayerVoiceLevelChanged", voiceLevel);
+            if (net) Client.TriggerServerEvent("Voice.PlayerVoiceLevelChanged", voiceLevel);
 
             script.Log($"Voice level set to {voiceLevelStr}");
         }
 
-        private void SetVoiceChannel(int voiceChannel)
+        private void SetVoiceChannel(int voiceChannel, bool net = true)
         {
             if (voiceChannel < -1) voiceChannel = -1;
             channel = voiceChannel;
 
-            Client.TriggerServerEvent("Voice.PlayerVoiceChannelChanged", channel);
+            if (net) Client.TriggerServerEvent("Voice.PlayerVoiceChannelChanged", channel);
         }
 
         private void SetNextVoiceLevel()
