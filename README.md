@@ -10,7 +10,11 @@
   
 ---
   
-### REQUIREMENTS:
+![Server Console Output](https://i.imgur.com/r3eYRmC.png)
+  
+---
+  
+### DEPENDENCIES:
 - [Vina Framework](https://github.com/VinaStar/Vina-Framework/releases)
   
 ---
