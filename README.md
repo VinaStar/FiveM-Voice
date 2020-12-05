@@ -72,7 +72,7 @@
 **info:** Get if the module is on or off  
   
 - setEnabled(**string** playerHandle, **bool** enabled)  
-*Toggle the module on or off*  
+**info:** Toggle the module on or off  
   
 - getVoiceLevel(**string** playerHandle)  
 **return:** int  
