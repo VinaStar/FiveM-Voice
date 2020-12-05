@@ -37,56 +37,56 @@
   
 ### CLIENT EXPORTS:
 - getEnabled()  
-**return bool**  
-*Get if the module is on or off*  
+**return:** bool  
+**info:** Get if the module is on or off  
   
-- setEnabled(**bool enabled**)  
-*Toggle the module on or off*  
+- setEnabled(**bool** enabled)  
+**info:** Toggle the module on or off  
   
 - getVisibility()  
-**return bool**  
-*Get if the module is visible or not*  
+**return:** bool  
+**info:** Get if the module is visible or not  
   
-- setVisibility(**bool visible**)  
-*Toggle the HUD visibility on or off*  
+- setVisibility(**bool** visible)  
+**info:** Toggle the HUD visibility on or off  
   
 - getVoiceLevel()  
-**return int**  
-*Get the voice level 0 = Whisper, 1 = Default, 2 = Shout*  
+**return:** int  
+**info:** Get the voice level, 0 = Whisper, 1 = Default, 2 = Shout  
   
-- setVoiceLevel(**int level**)  
-*Set the voice level 0 = Whisper, 1 = Default, 2 = Shout*  
+- setVoiceLevel(**int** level)  
+**info:** Set the voice level, 0 = Whisper, 1 = Default, 2 = Shout  
   
 - getVoiceChannel()  
-**return int**  
-*Set the voice channel -1 is proximity, >= 0 is channels*  
+**return:** int  
+**info:** Set the voice channel -1 is proximity, >= 0 is channels  
   
-- setVoiceChannel(**int channel**)  
-*Set the voice channel -1 is proximity, >= 0 is channels*  
+- setVoiceChannel(**int** channel)  
+**info:** Set the voice channel -1 is proximity, >= 0 is channels  
   
 ---
   
 ### SERVER EXPORTS:
-- getEnabled(**string playerHandle**)  
-**return bool**  
-*Get if the module is on or off*  
+- getEnabled(**string** playerHandle)  
+**return:** bool  
+**info:** Get if the module is on or off  
   
-- setEnabled(**string playerHandle**, **bool enabled**)  
+- setEnabled(**string** playerHandle, **bool** enabled)  
 *Toggle the module on or off*  
   
-- getVoiceLevel(**string playerHandle**)  
-**return int**  
-*Get the voice level 0 = Whisper, 1 = Default, 2 = Shout*  
+- getVoiceLevel(**string** playerHandle)  
+**return:** int  
+**info:** Get the voice level, 0 = Whisper, 1 = Default, 2 = Shout  
   
-- setVoiceLevel(**string playerHandle**, **int level**)  
-*Set the voice level 0 = Whisper, 1 = Default, 2 = Shout*  
+- setVoiceLevel(**string** playerHandle, **int** level)  
+**info:** Set the voice level, 0 = Whisper, 1 = Default, 2 = Shout  
   
-- getVoiceChannel(**string playerHandle**)  
-**return int**  
-*Set the voice channel -1 is proximity, >= 0 is channels*  
+- getVoiceChannel(**string** playerHandle)  
+**return:** int  
+**info:** Set the voice channel -1 is proximity, >= 0 is channels  
   
-- setVoiceChannel(**string playerHandle**, **int channel**)  
-*Set the voice channel -1 is proximity, >= 0 is channels*  
+- setVoiceChannel(**string** playerHandle, **int** channel)  
+**info:** Set the voice channel -1 is proximity, >= 0 is channels  
   
 ---
   
