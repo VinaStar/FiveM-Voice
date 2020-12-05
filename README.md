@@ -14,28 +14,28 @@
 ---
   
 ### EXPORTS:
-- getEnabled() return bool  
+- getEnabled() **return bool**  
 **Get if the module is on or off**  
   
-- setEnabled(bool)  
+- setEnabled(**bool**)  
 **Toggle the module on or off**  
   
-- getVisibility() return bool  
+- getVisibility() **return bool**  
 **Get if the module is visible or not**  
   
-- setVisibility(bool)  
+- setVisibility(**bool**)  
 **Toggle the HUD visibility on or off**  
   
-- getVoiceLevel() return int  
+- getVoiceLevel() **return int** 
 **Get the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
   
-- setVoiceLevel(int)  
+- setVoiceLevel(**int**)  
 **Set the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
   
 - getVoiceChannel() return int  
-**Get the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
+**Set the voice channel -1 is proximity, >= 0 is channels** 
   
-- setVoiceChannel(int)  
+- setVoiceChannel(**int**)  
 **Set the voice channel -1 is proximity, >= 0 is channels**  
   
 ---
