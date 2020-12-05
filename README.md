@@ -13,6 +13,15 @@
   
 ---
   
+### EXPORTS:
+- setEnabled(bool)  
+**Toggle the module on or off**  
+  
+- setVisibility(bool)  
+**Toggle the HUD visibility on or off**  
+  
+---
+  
 ### CONVARS:
 You can change the settings using convar in your FiveM server config file:
    
