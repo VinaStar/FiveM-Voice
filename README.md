@@ -18,6 +18,16 @@
 - [Vina Framework](https://github.com/VinaStar/Vina-Framework/releases)
   
 ---
+   
+### INSTRUCTIONS:
+   
+   **1)** Place "fivemvoice" directory inside your server Resources directory.
+   
+   **2)** Add "ensure fivemvoice" to your server config.
+   
+   **3)** Start your FiveM server.
+   
+---
   
 ### CLIENT EXPORTS:
 - getEnabled()  
