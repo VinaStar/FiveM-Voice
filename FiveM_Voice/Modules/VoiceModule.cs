@@ -37,28 +37,37 @@ namespace FiveM_Voice.Modules
             script.SetExport("setVoiceChannel", new Action<int>(ExportSetVoiceChannel));
         }
 
+        #region MODULES
+
+        NuiModule nuiModule;
+
+        #endregion
         #region VARIABLES
 
         int playerId = -1;
         int channel = -1;
         bool enabled = false;
         bool visible = false;
+        bool wasVisible = false;
         bool hidden = false;
         float levelWhisper = 5.0f;
         float levelDefault = 25.0f;
         float levelShout = 50.0f;
         Voices voiceLevel = Voices.Default;
         string voiceLevelStr = "";
+        string speakingStr = "";
 
         #endregion
         #region BASE EVENTS
 
         protected override void OnModuleInitialized()
         {
+            nuiModule = client.GetModule<NuiModule>();
+
             playerId = API.PlayerId();
 
             script.AddTick(ProcessControls);
-            script.AddTick(DrawVoiceLevel);
+            //script.AddTick(DrawVoiceLevel);
             script.AddTick(UpdateVoiceProximity);
             script.AddTick(DrawCurrentlyTalking);
         }
@@ -172,25 +181,37 @@ namespace FiveM_Voice.Modules
 
             if (!enabled || !visible) return;
 
+            string talkingString = "";
             foreach (Player player in client.GetPlayers())
             {
                 if (API.NetworkIsPlayerTalking(player.Handle))
                 {
                     if (!currentlyTalking)
                     {
-                        DrawTextOnScreen("~s~Currently Talking", 0.5f, 0.00f, 0.5f, Alignment.Center, 6, false);
+                        //DrawTextOnScreen("~s~Currently Talking", 0.5f, 0.00f, 0.5f, Alignment.Center, 6, false);
                         currentlyTalking = true;
                     }
                     if (player.Handle == playerId)
                     {
-                        DrawTextOnScreen($"~b~You", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
+                        talkingString += "<span class='self'>You</span>";
+                        //DrawTextOnScreen($"~b~You", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
                     }
                     else
                     {
-                        DrawTextOnScreen($"~b~{player.Name}", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
+                        talkingString += $"<span>{player.Name}</span>";
+                        //DrawTextOnScreen($"~b~{player.Name}", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
                     }
                     i++;
                 }
+            }
+
+            if (speakingStr != talkingString)
+            {
+                speakingStr = talkingString;
+
+                if (speakingStr == "") await Client.Delay(200);
+
+                nuiModule.UpdateTalking(speakingStr);
             }
         }
 
@@ -199,12 +220,26 @@ namespace FiveM_Voice.Modules
 
         private bool isVisible()
         {
-            return (!hidden && enabled && API.IsHudPreferenceSwitchedOn() && !API.IsPlayerSwitchInProgress() && API.IsScreenFadedIn() && !API.IsPauseMenuActive() && !API.IsFrontendFading() && !API.IsPauseMenuRestarting());
+            bool _visible = (!hidden && enabled && API.IsHudPreferenceSwitchedOn() && !API.IsPlayerSwitchInProgress() && API.IsScreenFadedIn() && !API.IsPauseMenuActive() && !API.IsFrontendFading() && !API.IsPauseMenuRestarting());
+            
+            if (!wasVisible && _visible)
+            {
+                nuiModule.SetVisibility(true);
+                wasVisible = true;
+            }
+            else if (wasVisible && !_visible)
+            {
+                nuiModule.SetVisibility(false);
+                wasVisible = false;
+            }
+
+            return _visible;
         }
 
         private void SetVoiceEnabled(bool isEnabled, bool net = true)
         {
             enabled = isEnabled;
+            nuiModule.SetEnabled(enabled);
             if (net) Client.TriggerServerEvent("Voice.PlayerVoiceEnabledChanged", enabled);
         }
 
@@ -233,6 +268,8 @@ namespace FiveM_Voice.Modules
                 voiceLevelStr = $"Shout ({levelShout}m)";
             }
 
+            nuiModule.SetVoiceLevel(voiceLevelStr);
+
             if (net) Client.TriggerServerEvent("Voice.PlayerVoiceLevelChanged", (int) voiceLevel);
 
             script.Log($"Voice level set to {voiceLevelStr}");
@@ -242,6 +279,8 @@ namespace FiveM_Voice.Modules
         {
             if (voiceChannel < -1) voiceChannel = -1;
             channel = voiceChannel;
+
+            nuiModule.SetChannel(channel);
 
             if (net) Client.TriggerServerEvent("Voice.PlayerVoiceChannelChanged", channel);
         }

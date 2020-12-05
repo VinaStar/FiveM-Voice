@@ -7,6 +7,7 @@ namespace FiveM_Voice
     {
         public Client()
         {
+            AddModule(typeof(NuiModule));
             AddModule(typeof(VoiceModule));
         }
     }
