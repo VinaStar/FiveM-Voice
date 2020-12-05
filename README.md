@@ -20,6 +20,9 @@
 - setVisibility(bool)  
 **Toggle the HUD visibility on or off**  
   
+-- setVoiceLevel(int)  
+**Set the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
+  
 ---
   
 ### CONVARS:
