@@ -10,9 +10,9 @@ namespace FiveM_Voice.Modules
 {
     public enum Voices
     {
-        Whisper = 5,
-        Default = 10,
-        Shout = 20
+        Whisper = 0,
+        Default = 1,
+        Shout = 2
     }
 
     public class VoiceModule : Module
@@ -20,6 +20,18 @@ namespace FiveM_Voice.Modules
         public VoiceModule(Client client) : base(client)
         {
             script.AddEvent("Voice.SetVoiceSettings", new Action<float, float, float>(OnSetVoiceSettings));
+            
+            script.SetExport("getEnabled", new Func<bool>(ExportGetEnabled));
+            script.SetExport("setEnabled", new Action<bool>(ExportSetEnabled));
+
+            script.SetExport("getVisibility", new Func<bool>(ExportGetVisibility));
+            script.SetExport("setVisibility", new Action<bool>(ExportSetVisibility));
+
+            script.SetExport("getVoiceLevel", new Func<int>(ExportGetVoiceLevel));
+            script.SetExport("setVoiceLevel", new Action<int>(ExportSetVoiceLevel));
+
+            script.SetExport("getVoiceChannel", new Func<int>(ExportGetVoiceChannel));
+            script.SetExport("setVoiceChannel", new Action<int>(ExportSetVoiceChannel));
         }
 
         #region ACCESSORS
@@ -30,8 +42,10 @@ namespace FiveM_Voice.Modules
         #region VARIABLES
 
         int playerId = -1;
+        int channel = -1;
         bool enabled = false;
         bool visible = false;
+        bool hidden = false;
         float levelWhisper = 5.0f;
         float levelDefault = 25.0f;
         float levelShout = 50.0f;
@@ -87,7 +101,15 @@ namespace FiveM_Voice.Modules
             }
 
             API.NetworkSetVoiceActive(true);
-            API.NetworkClearVoiceChannel();
+
+            if (channel < 0)
+            {
+                API.NetworkClearVoiceChannel();
+            }
+            else
+            {
+                API.NetworkSetVoiceChannel(channel);
+            }
             
             if (voiceLevel == Voices.Whisper)
             {
@@ -105,6 +127,8 @@ namespace FiveM_Voice.Modules
 
         private async Task ProcessControls()
         {
+            if (!enabled) return;
+
             bool keyOne = (Game.IsControlPressed(0, Control.Sprint) || Game.IsDisabledControlPressed(0, Control.Sprint));
             bool keyTwo = (Game.IsControlJustPressed(0, Control.VehicleHeadlight) || Game.IsDisabledControlJustPressed(0, Control.VehicleHeadlight));
 
@@ -130,10 +154,10 @@ namespace FiveM_Voice.Modules
 
         private async Task DrawCurrentlyTalking()
         {
-            if (!enabled || !visible) return;
-            
             var i = 1;
             var currentlyTalking = false;
+
+            if (!enabled || !visible) return;
 
             foreach (Player player in client.GetPlayers())
             {
@@ -162,7 +186,7 @@ namespace FiveM_Voice.Modules
 
         private bool isVisible()
         {
-            return (API.IsHudPreferenceSwitchedOn() && !API.IsPlayerSwitchInProgress() && API.IsScreenFadedIn() && !API.IsPauseMenuActive() && !API.IsFrontendFading() && !API.IsPauseMenuRestarting() && !API.IsHudHidden());
+            return (!hidden && enabled && API.IsHudPreferenceSwitchedOn() && !API.IsPlayerSwitchInProgress() && API.IsScreenFadedIn() && !API.IsPauseMenuActive() && !API.IsFrontendFading() && !API.IsPauseMenuRestarting());
         }
 
         private void SetVoiceLevel(Voices level)
@@ -205,8 +229,6 @@ namespace FiveM_Voice.Modules
 
         private void DrawLevel(int r, int g, int b, int a)
         {
-            if (!enabled || !visible) return;
-
             API.SetTextFont(4);
             API.SetTextScale(0.5f, 0.5f);
             API.SetTextColour(r, g, b, a);
@@ -214,14 +236,12 @@ namespace FiveM_Voice.Modules
             API.SetTextDropShadow();
             API.SetTextOutline();
             API.BeginTextCommandDisplayText("STRING");
-            API.AddTextComponentSubstringPlayerName(voiceLevelStr);
+            API.AddTextComponentSubstringPlayerName((channel < 0) ? voiceLevelStr : $"Channel: {channel}");
             API.EndTextCommandDisplayText(0.175f, 0.92f);
         }
 
         private void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, Alignment justification, int font, bool disableTextOutline)
         {
-            if (!enabled || !visible) return;
-
             API.SetTextFont(font);
             API.SetTextScale(1.0f, size);
             if (justification == Alignment.Right)
@@ -233,6 +253,56 @@ namespace FiveM_Voice.Modules
             API.BeginTextCommandDisplayText("STRING");
             API.AddTextComponentSubstringPlayerName(text);
             API.EndTextCommandDisplayText(xPosition, yPosition);
+        }
+
+        #endregion
+        #region MODULE EXPORTS
+
+        private bool ExportGetEnabled()
+        {
+            return enabled;
+        }
+
+        private void ExportSetEnabled(bool isEnabled)
+        {
+            enabled = isEnabled;
+            script.Log($"{((enabled) ? "Enabled" : "Disabled")} from an export call.");
+        }
+
+        private bool ExportGetVisibility()
+        {
+            return visible;
+        }
+
+        private void ExportSetVisibility(bool isVisible)
+        {
+            hidden = !isVisible;
+            script.Log($"{((hidden) ? "Hidden" : "Shown")} from an export call.");
+        }
+
+        private int ExportGetVoiceLevel()
+        {
+            return (int)voiceLevel;
+        }
+
+        private void ExportSetVoiceLevel(int voiceLevel)
+        {
+            if (voiceLevel >= 0 && voiceLevel <= 2)
+            {
+                SetVoiceLevel((Voices) voiceLevel);
+                script.Log($"Voice level set to {voiceLevel} from an export call.");
+            }
+        }
+
+        private int ExportGetVoiceChannel()
+        {
+            return channel;
+        }
+
+        private void ExportSetVoiceChannel(int voiceChannel)
+        {
+            if (voiceChannel < -1) voiceChannel = -1;
+            channel = voiceChannel;
         }
 
         #endregion
