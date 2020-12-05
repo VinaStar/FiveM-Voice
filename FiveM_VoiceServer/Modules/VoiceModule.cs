@@ -82,7 +82,7 @@ FIVEM VOICE SETTINGS:
 
         protected override void OnPlayerClientInitialized(Player player)
         {
-            SetPlayerVoiceSettings(player.Handle);
+            SetPlayerVoiceSettings(player);
         }
 
         #endregion
@@ -139,9 +139,9 @@ FIVEM VOICE SETTINGS:
         #endregion
         #region MODULE METHODS
 
-        private void SetPlayerVoiceSettings(string playerHandle)
+        private void SetPlayerVoiceSettings(Player player)
         {
-            Server.TriggerClientEvent(playerHandle, "Voice.SetVoiceSettings", whisper_proximity_distance, default_proximity_distance, shout_proximity_distance);
+            Server.TriggerClientEvent(player, "Voice.SetVoiceSettings", whisper_proximity_distance, default_proximity_distance, shout_proximity_distance);
         }
 
         private void SetPlayerVoiceEnabled(string playerHandle, bool enabled)

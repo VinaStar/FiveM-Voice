@@ -233,7 +233,7 @@ namespace FiveM_Voice.Modules
                 voiceLevelStr = $"Shout ({levelShout}m)";
             }
 
-            if (net) Client.TriggerServerEvent("Voice.PlayerVoiceLevelChanged", voiceLevel);
+            if (net) Client.TriggerServerEvent("Voice.PlayerVoiceLevelChanged", (int) voiceLevel);
 
             script.Log($"Voice level set to {voiceLevelStr}");
         }
