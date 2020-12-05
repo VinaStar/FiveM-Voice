@@ -37,11 +37,6 @@ namespace FiveM_Voice.Modules
             script.SetExport("setVoiceChannel", new Action<int>(ExportSetVoiceChannel));
         }
 
-        #region ACCESSORS
-
-
-
-        #endregion
         #region VARIABLES
 
         int playerId = -1;

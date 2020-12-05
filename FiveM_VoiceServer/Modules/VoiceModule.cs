@@ -22,30 +22,25 @@ namespace FiveM_VoiceServer.Modules
             script.AddEvent("Voice.PlayerVoiceLevelChanged", new Action<Player, int>(OnPlayerVoiceLevelChanged));
             script.AddEvent("Voice.PlayerVoiceChannelChanged", new Action<Player, int>(OnPlayerVoiceChannelChanged));
 
-            script.SetExport("getEnabled", new Func<int, bool>(ExportGetEnabled));
-            script.SetExport("setEnabled", new Action<int, bool>(ExportSetEnabled));
+            script.SetExport("getEnabled", new Func<string, bool>(ExportGetEnabled));
+            script.SetExport("setEnabled", new Action<string, bool>(ExportSetEnabled));
 
-            script.SetExport("getVoiceLevel", new Func<int, int>(ExportGetVoiceLevel));
-            script.SetExport("setVoiceLevel", new Action<int, int>(ExportSetVoiceLevel));
+            script.SetExport("getVoiceLevel", new Func<string, int>(ExportGetVoiceLevel));
+            script.SetExport("setVoiceLevel", new Action<string, int>(ExportSetVoiceLevel));
 
-            script.SetExport("getVoiceChannel", new Func<int, int>(ExportGetVoiceChannel));
-            script.SetExport("setVoiceChannel", new Action<int, int>(ExportSetVoiceChannel));
+            script.SetExport("getVoiceChannel", new Func<string, int>(ExportGetVoiceChannel));
+            script.SetExport("setVoiceChannel", new Action<string, int>(ExportSetVoiceChannel));
         }
 
-        #region ACCESSORS
-
-
-
-        #endregion
         #region VARIABLES
 
         Dictionary<string, bool> _playerVoiceEnabled;
         Dictionary<string, int> _playerVoiceLevels;
         Dictionary<string, int> _playerVoiceChannels;
 
-        float whisper_level;
-        float default_level;
-        float shout_level;
+        float whisper_proximity_distance;
+        float default_proximity_distance;
+        float shout_proximity_distance;
 
         #endregion
         #region BASE EVENTS
@@ -53,21 +48,21 @@ namespace FiveM_VoiceServer.Modules
         protected override void OnModuleInitialized()
         {
             // Print more informations
-            whisper_level = (float)API.GetConvarInt("fivem_voice_level_whisper", 5);
+            whisper_proximity_distance = (float)API.GetConvarInt("fivem_voice_whisper_proximity_distance", 5);
 
             // Peridically print current time
-            default_level = (float)API.GetConvarInt("fivem_voice_level_default", 25);
+            default_proximity_distance = (float)API.GetConvarInt("fivem_voice_default_proximity_distance", 25);
 
             // Console Print Time Format
-            shout_level = (float)API.GetConvarInt("fivem_voice_level_shout", 50);
+            shout_proximity_distance = (float)API.GetConvarInt("fivem_voice_shout_proximity_distance", 50);
 
             Debug.WriteLine($@"
 =====================================
 FIVEM VOICE SETTINGS:
 =====================================
- fivem_voice_level_whisper      = {whisper_level}
- fivem_voice_level_default      = {default_level}
- fivem_voice_level_shout (ms)   = {shout_level}
+ fivem_voice_level_whisper      = {whisper_proximity_distance}
+ fivem_voice_level_default      = {default_proximity_distance}
+ fivem_voice_level_shout (ms)   = {shout_proximity_distance}
 =====================================");
         }
 
@@ -111,60 +106,60 @@ FIVEM VOICE SETTINGS:
         #endregion
         #region MODULE EXPORTS
 
-        private bool ExportGetEnabled(int playerHandle)
+        private bool ExportGetEnabled(string playerHandle)
         {
-            return _playerVoiceEnabled[API.GetPlayerFromIndex(playerHandle)];
+            return _playerVoiceEnabled[playerHandle];
         }
 
-        private void ExportSetEnabled(int playerHandle, bool enabled)
+        private void ExportSetEnabled(string playerHandle, bool enabled)
         {
-            SetPlayerVoiceEnabled(API.GetPlayerFromIndex(playerHandle), enabled);
+            SetPlayerVoiceEnabled(playerHandle, enabled);
         }
 
-        private int ExportGetVoiceLevel(int playerHandle)
+        private int ExportGetVoiceLevel(string playerHandle)
         {
-            return _playerVoiceLevels[API.GetPlayerFromIndex(playerHandle)];
+            return _playerVoiceLevels[playerHandle];
         }
 
-        private void ExportSetVoiceLevel(int playerHandle, int level)
+        private void ExportSetVoiceLevel(string playerHandle, int level)
         {
-            SetPlayerVoiceLevel(API.GetPlayerFromIndex(playerHandle), level);
+            SetPlayerVoiceLevel(playerHandle, level);
         }
 
-        private int ExportGetVoiceChannel(int playerHandle)
+        private int ExportGetVoiceChannel(string playerHandle)
         {
-            return _playerVoiceChannels[API.GetPlayerFromIndex(playerHandle)];
+            return _playerVoiceChannels[playerHandle];
         }
 
-        private void ExportSetVoiceChannel(int playerHandle, int channel)
+        private void ExportSetVoiceChannel(string playerHandle, int channel)
         {
-            SetPlayerVoiceChannel(API.GetPlayerFromIndex(playerHandle), channel);
+            SetPlayerVoiceChannel(playerHandle, channel);
         }
 
         #endregion
         #region MODULE METHODS
 
-        private void SetPlayerVoiceSettings(string player)
+        private void SetPlayerVoiceSettings(string playerHandle)
         {
-            Server.TriggerClientEvent(player, "Voice.SetVoiceSettings", whisper_level, default_level, shout_level);
+            Server.TriggerClientEvent(playerHandle, "Voice.SetVoiceSettings", whisper_proximity_distance, default_proximity_distance, shout_proximity_distance);
         }
 
-        private void SetPlayerVoiceEnabled(string player, bool enabled)
+        private void SetPlayerVoiceEnabled(string playerHandle, bool enabled)
         {
-            _playerVoiceEnabled[player] = enabled;
-            Server.TriggerClientEvent(player, "Voice.SetVoiceEnabled", enabled);
+            _playerVoiceEnabled[playerHandle] = enabled;
+            Server.TriggerClientEvent(playerHandle, "Voice.SetVoiceEnabled", enabled);
         }
 
-        private void SetPlayerVoiceLevel(string player, int level)
+        private void SetPlayerVoiceLevel(string playerHandle, int level)
         {
-            _playerVoiceLevels[player] = level;
-            Server.TriggerClientEvent(player, "Voice.SetVoiceLevel", level);
+            _playerVoiceLevels[playerHandle] = level;
+            Server.TriggerClientEvent(playerHandle, "Voice.SetVoiceLevel", level);
         }
 
-        private void SetPlayerVoiceChannel(string player, int channel)
+        private void SetPlayerVoiceChannel(string playerHandle, int channel)
         {
-            _playerVoiceChannels[player] = channel;
-            Server.TriggerClientEvent(player, "Voice.SetVoiceChannel", channel);
+            _playerVoiceChannels[playerHandle] = channel;
+            Server.TriggerClientEvent(playerHandle, "Voice.SetVoiceChannel", channel);
         }
 
         #endregion
