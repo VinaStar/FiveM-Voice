@@ -32,7 +32,7 @@
 - setVoiceLevel(**int**)  
 **Set the voice level 0 = Whisper, 1 = Default, 2 = Shout**  
   
-- getVoiceChannel() return int  
+- getVoiceChannel() **return int**  
 **Set the voice channel -1 is proximity, >= 0 is channels** 
   
 - setVoiceChannel(**int**)  
