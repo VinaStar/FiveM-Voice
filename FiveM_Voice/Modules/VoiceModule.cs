@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using CitizenFX.Core.UI;
+
 using VinaFrameworkClient.Core;
 
 namespace FiveM_Voice.Modules
@@ -152,30 +152,22 @@ namespace FiveM_Voice.Modules
             if (!enabled) return;
 
             bool keyOne = (Game.IsControlPressed(0, Control.Sprint) || Game.IsDisabledControlPressed(0, Control.Sprint));
-            bool keyTwo = (Game.IsControlJustPressed(0, Control.VehicleHeadlight) || Game.IsDisabledControlJustPressed(0, Control.VehicleHeadlight));
-
-            if (keyOne && keyTwo)
+            
+            if (keyOne)
             {
-                SetNextVoiceLevel();
-            }
-        }
+                bool keyTwo = (Game.IsControlJustPressed(0, Control.VehicleHeadlight) || Game.IsDisabledControlJustPressed(0, Control.VehicleHeadlight));
 
-        private async Task DrawVoiceLevel()
-        {
-            if (!enabled || !visible) return;
-
-            if (API.NetworkIsPlayerTalking(playerId))
-            {
-                DrawLevel(41, 128, 185, 255);
-            }
-            else
-            {
-                DrawLevel(185, 185, 185, 255);
+                if (keyTwo)
+                {
+                    SetNextVoiceLevel();
+                }
             }
         }
 
         private async Task DrawCurrentlyTalking()
         {
+            await Client.Delay(100);
+
             var i = 1;
             var currentlyTalking = false;
 
@@ -188,18 +180,15 @@ namespace FiveM_Voice.Modules
                 {
                     if (!currentlyTalking)
                     {
-                        //DrawTextOnScreen("~s~Currently Talking", 0.5f, 0.00f, 0.5f, Alignment.Center, 6, false);
                         currentlyTalking = true;
                     }
                     if (player.Handle == playerId)
                     {
                         talkingString += "<span class='self'>You</span>";
-                        //DrawTextOnScreen($"~b~You", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
                     }
                     else
                     {
                         talkingString += $"<span>{player.Name}</span>";
-                        //DrawTextOnScreen($"~b~{player.Name}", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6, false);
                     }
                     i++;
                 }
@@ -208,8 +197,6 @@ namespace FiveM_Voice.Modules
             if (speakingStr != talkingString)
             {
                 speakingStr = talkingString;
-
-                if (speakingStr == "") await Client.Delay(200);
 
                 nuiModule.UpdateTalking(speakingStr);
             }
@@ -301,34 +288,6 @@ namespace FiveM_Voice.Modules
             }
 
             SetVoiceLevel(voiceLevel);
-        }
-
-        private void DrawLevel(int r, int g, int b, int a)
-        {
-            API.SetTextFont(4);
-            API.SetTextScale(0.5f, 0.5f);
-            API.SetTextColour(r, g, b, a);
-            API.SetTextDropshadow(0, 0, 0, 0, 255);
-            API.SetTextDropShadow();
-            API.SetTextOutline();
-            API.BeginTextCommandDisplayText("STRING");
-            API.AddTextComponentSubstringPlayerName((channel < 0) ? voiceLevelStr : $"Channel: {channel}");
-            API.EndTextCommandDisplayText(0.175f, 0.92f);
-        }
-
-        private void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, Alignment justification, int font, bool disableTextOutline)
-        {
-            API.SetTextFont(font);
-            API.SetTextScale(1.0f, size);
-            if (justification == Alignment.Right)
-            {
-                API.SetTextWrap(0f, xPosition);
-            }
-            API.SetTextJustification((int)justification);
-            if (!disableTextOutline) { API.SetTextOutline(); }
-            API.BeginTextCommandDisplayText("STRING");
-            API.AddTextComponentSubstringPlayerName(text);
-            API.EndTextCommandDisplayText(xPosition, yPosition);
         }
 
         #endregion
