@@ -23,11 +23,11 @@
 			
 		switch(action) {
 			case "SetEnabled":
-				SetEnabled((data == "True"));
+				SetEnabled(data);
 				break;
 			
 			case "SetVisibility":
-				SetVisibility((data == "True"));
+				SetVisibility(data);
 				break;
 				
 			case "SetVoiceLevel":
@@ -35,7 +35,7 @@
 				break;
 				
 			case "SetChannel":
-				SetChannel(parseInt(data));
+				SetChannel(data);
 				break;
 				
 			case "UpdateTalking":
