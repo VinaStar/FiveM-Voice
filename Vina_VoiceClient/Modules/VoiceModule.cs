@@ -6,7 +6,7 @@ using CitizenFX.Core.Native;
 
 using VinaFrameworkClient.Core;
 
-namespace FiveM_Voice.Modules
+namespace Vina_VoiceClient.Modules
 {
     public enum Voices
     {

@@ -1,6 +1,6 @@
 game 'gta5'
-client_script 'FiveM_Voice.net.dll'
-server_script 'FiveM_VoiceServer.net.dll'
+client_script 'Vina_VoiceClient.net.dll'
+server_script 'Vina_VoiceServer.net.dll'
 
 ui_page 'assets/index.html'
 

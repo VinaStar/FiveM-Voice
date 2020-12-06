@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FiveM_Voice")]
+[assembly: AssemblyTitle("Vina_Voice")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FiveM_VoiceServer")]
+[assembly: AssemblyProduct("Vina_VoiceServer")]
 [assembly: AssemblyCopyright("Copyright © VinaStar 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

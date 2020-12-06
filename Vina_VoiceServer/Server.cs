@@ -1,7 +1,7 @@
 ﻿using VinaFrameworkServer.Core;
-using FiveM_VoiceServer.Modules;
+using Vina_VoiceServer.Modules;
 
-namespace FiveM_VoiceServer
+namespace Vina_VoiceServer
 {
     public class Server : BaseServer
     {

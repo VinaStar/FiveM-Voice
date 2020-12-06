@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+html, body {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	z-index: 99999;
+	display: block;
+	position: fixed;
+	color: #fff;
+	font-family: "Oswald";
+	background: rgba(0, 0, 0, 0);
+}
+
+ui {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	z-index: 9999;
+	display: block;
+	position: absolute;
+}
+
+ui {
+	display: none;
+}
+
+ui.visible {
+	display: block;
+}
+
+ui .voiceLevel {
+	bottom: 25px;
+	left: 340px;
+	font-size: 24px;
+	position: absolute;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: black;
+}
+
+ui .talkings-container {
+	top: 40px;
+	left: 50%;
+	display: table;
+	position: absolute;
+	transform: translateX(-50%);
+	opacity: 0;
+	padding: 10px 30px;
+	border-radius: 3px;
+	background: rgba(0, 0, 0, 0.1);
+}
+ui .talkings-container.visible {
+	opacity: 1;
+}
+
+ui .talkings-container .title {
+	width: 100%;
+	display: block;
+	color: white;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+}
+
+ui .talkings span {
+	width: 100%;
+	display: block;
+	padding-bottom: 10px;
+	color: yellow;
+	font-size: 22px;
+	text-align: center;
+}
+
+ui .talkings span.self {
+	color: blue;
+}

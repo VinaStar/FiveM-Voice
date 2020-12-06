@@ -1,7 +1,7 @@
 ﻿using VinaFrameworkClient.Core;
-using FiveM_Voice.Modules;
+using Vina_VoiceClient.Modules;
 
-namespace FiveM_Voice
+namespace Vina_VoiceClient
 {
     public class Client : BaseClient
     {
