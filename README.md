@@ -59,7 +59,7 @@
   
 - getVoiceChannel()  
 **return:** int  
-**info:** Set the voice channel -1 is proximity, >= 0 is channels  
+**info:** Get the voice channel -1 is proximity, >= 0 is channels  
   
 - setVoiceChannel(**int** channel)  
 **info:** Set the voice channel -1 is proximity, >= 0 is channels  
@@ -83,7 +83,7 @@
   
 - getVoiceChannel(**string** playerHandle)  
 **return:** int  
-**info:** Set the voice channel -1 is proximity, >= 0 is channels  
+**info:** Get the voice channel -1 is proximity, >= 0 is channels  
   
 - setVoiceChannel(**string** playerHandle, **int** channel)  
 **info:** Set the voice channel -1 is proximity, >= 0 is channels  
