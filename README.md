@@ -2,12 +2,12 @@
 
 ### FEATURES:
 - 3 range modes (Whisper, Default, Shout)
-- Proximity or global channels
-- Customizable UI using CSS
-- Switch range mode using Shift+H (Controller Sprint + RightDpad)
-- View currently speaking players
-- Server side range settings configurable
-- Exported Method to use with your own resources
+- Can use Proximity or Global Channels
+- Can customize UI with CSS
+- Can switch voice range using *Shift+H* (Controller *Sprint + RightDpad*)
+- Can see currently speaking players
+- Can configure resource in the server.cfg
+- Can use exports methods with your own resources
   
 ---
   
