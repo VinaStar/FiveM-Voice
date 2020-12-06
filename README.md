@@ -1,4 +1,4 @@
-# FiveM-Voice
+# Vina-Voice
 
 ### FEATURES:
 - 3 range modes (Whisper, Default, Shout)
@@ -27,9 +27,9 @@
    
 ### INSTRUCTIONS:
    
-   **1)** Place "fivemvoice" directory inside your server Resources directory.
+   **1)** Place "vinavoice" directory inside your server Resources directory.
    
-   **2)** Add "ensure fivemvoice" to your server config.
+   **2)** Add "ensure vinavoice" to your server config.
    
    **3)** Start your FiveM server.
    
@@ -93,11 +93,11 @@
 ### CONVARS:
 You can change the settings using convar in your FiveM server config file:
    
-- *set fivem_voice_whisper_proximity_distance 5*  
+- *set vina_voice_whisper_proximity_distance 5*  
 **Set the range of Whispering to 5 meters**
 
-- *set fivem_voice_default_proximity_distance 25*  
+- *set vina_voice_default_proximity_distance 25*  
 **Set the range of Default to 25 meters**
 
-- *set fivem_voice_shout_proximity_distance 50*  
+- *set vina_voice_shout_proximity_distance 50*  
 **Set the range of Shouting to 50 meters**
