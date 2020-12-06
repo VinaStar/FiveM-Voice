@@ -168,20 +168,14 @@ namespace FiveM_Voice.Modules
         {
             await Client.Delay(100);
 
-            var i = 1;
-            var currentlyTalking = false;
-
             if (!enabled || !visible) return;
 
             string talkingString = "";
+
             foreach (Player player in client.GetPlayers())
             {
                 if (API.NetworkIsPlayerTalking(player.Handle))
                 {
-                    if (!currentlyTalking)
-                    {
-                        currentlyTalking = true;
-                    }
                     if (player.Handle == playerId)
                     {
                         talkingString += "<span class='self'>You</span>";
@@ -190,7 +184,6 @@ namespace FiveM_Voice.Modules
                     {
                         talkingString += $"<span>{player.Name}</span>";
                     }
-                    i++;
                 }
             }
 
@@ -200,6 +193,8 @@ namespace FiveM_Voice.Modules
 
                 nuiModule.UpdateTalking(speakingStr);
             }
+
+            talkingString = null;
         }
 
         #endregion
