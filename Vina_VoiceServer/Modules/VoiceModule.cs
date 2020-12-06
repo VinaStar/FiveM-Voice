@@ -46,21 +46,21 @@ namespace Vina_VoiceServer.Modules
         protected override void OnModuleInitialized()
         {
             // Print more informations
-            whisper_proximity_distance = (float)API.GetConvarInt("fivem_voice_whisper_proximity_distance", 5);
+            whisper_proximity_distance = (float)API.GetConvarInt("vina_voice_whisper_proximity_distance", 5);
 
             // Peridically print current time
-            default_proximity_distance = (float)API.GetConvarInt("fivem_voice_default_proximity_distance", 25);
+            default_proximity_distance = (float)API.GetConvarInt("vina_voice_default_proximity_distance", 25);
 
             // Console Print Time Format
-            shout_proximity_distance = (float)API.GetConvarInt("fivem_voice_shout_proximity_distance", 50);
+            shout_proximity_distance = (float)API.GetConvarInt("vina_voice_shout_proximity_distance", 50);
 
             Debug.WriteLine($@"
 =====================================
-FIVEM VOICE SETTINGS:
+VINA VOICE SETTINGS:
 =====================================
- fivem_voice_level_whisper      = {whisper_proximity_distance}
- fivem_voice_level_default      = {default_proximity_distance}
- fivem_voice_level_shout (ms)   = {shout_proximity_distance}
+ vina_voice_whisper_proximity_distance      = {whisper_proximity_distance}
+ vina_voice_default_proximity_distance      = {default_proximity_distance}
+ vina_voice_shout_proximity_distance (ms)   = {shout_proximity_distance}
 =====================================");
         }
 
